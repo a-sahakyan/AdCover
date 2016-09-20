@@ -29,8 +29,6 @@ namespace AdCover
             this.Name = "AdCover";
             CreateContextMenu();
             this.SetStyle(ControlStyles.ResizeRedraw, true);
-            //f = new Form1();
-           
         }
 
         public Form1(Form1 parent)
@@ -116,10 +114,7 @@ namespace AdCover
 
         private void CreateOriginalForm(object sender, EventArgs e)
         {
-
             CreateOriginForm();
-           
-            
         }
 
         private void Close(object sender, EventArgs e)
@@ -134,22 +129,12 @@ namespace AdCover
  
         public void CreateOriginForm()
         {
-
-
-
             Form1 f = new Form1(this);
             f.ShowInTaskbar = false;
             f.Show();
             f.BackColor = f.parent.BackColor;
             f.BackgroundImage = f.parent.BackgroundImage;
             f.Size = f.parent.Size;
-
-
-           
-
-
-
-
         }
 
         public void CreateForm()
@@ -375,21 +360,17 @@ namespace AdCover
 
         private void TimerPause(object sender, EventArgs e)
         {
-
             timer1.Stop();
             player.Stop();
-
         }
 
         private void TimerResume(object sender, EventArgs e)
         {
             timer1.Start();
-
         }
 
         private void TimerCancel(object sender, EventArgs e)
         {
-
             clock.Hide();
             hourLabel.Hide();
             minuteLabel.Hide();
@@ -401,11 +382,6 @@ namespace AdCover
             fileNameBox.Hide();
             openFileButton.Hide();
             fileLabel.Hide();
-        }
-
-        private void PlayAlarm(object sender, EventArgs e)
-        {
-            //
         }
 
         private void OpenFileButton(object sender, EventArgs e)
@@ -422,7 +398,6 @@ namespace AdCover
 
         protected void PrintImage(object sender, EventArgs e)
         {
-
             PrintDocument pd = new PrintDocument();
             pd.PrintPage += (senders, args) =>
             {
@@ -441,8 +416,7 @@ namespace AdCover
             Point loc = new Point(100, 100);
             e.Graphics.DrawImage(img, loc);
         }
-
-     
+    
         private void LoadForm(object sender, EventArgs e)
         {
             clock.Hide();
@@ -456,7 +430,6 @@ namespace AdCover
             openFileButton.Hide();
             fileLabel.Hide();
             this.BackColor = System.Drawing.Color.Yellow;
-
         }
     }
 }
