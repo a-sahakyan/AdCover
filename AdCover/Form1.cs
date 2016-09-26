@@ -10,7 +10,7 @@ namespace AdCover
 {
     public partial class Form1 : Form
     {
-        ColorDialog colorDialog1;
+        bool timerPauseWasClicked = true;
         public Image myimage;
         private bool OpenFileButtonWasClicked = false;
         int hour;
@@ -37,79 +37,95 @@ namespace AdCover
             this.parent = parent;
             CreateContextMenu();
             this.SetStyle(ControlStyles.ResizeRedraw, true);
-          
         }
+        
 
         /// <summary>
         /// 
         /// </summary>
+        /// 
         private void CreateContextMenu()
         {
-            cm = new ContextMenu();
-            MenuItem setColorItem = new MenuItem("Set Color");
-            setColorItem.Click += ColorDialog;
-            cm.MenuItems.Add(setColorItem);
+            try
+            {
+                cm = new ContextMenu();
+                MenuItem setColorItem = new MenuItem("Set Color");
+                setColorItem.Click += ColorDialog;
+                cm.MenuItems.Add(setColorItem);
 
-            MenuItem setImageItem = new MenuItem("Set Image");
-            cm.MenuItems.Add(setImageItem);
+                MenuItem setImageItem = new MenuItem("Set Image");
+                cm.MenuItems.Add(setImageItem);
 
-            MenuItem addImageItem = new MenuItem("Add Image");
-            setImageItem.MenuItems.Add(addImageItem);
-            addImageItem.Click += AddImage;
+                MenuItem addImageItem = new MenuItem("Add Image");
+                setImageItem.MenuItems.Add(addImageItem);
+                addImageItem.Click += AddImage;
 
-            MenuItem saveItem = new MenuItem("Save");
-            setImageItem.MenuItems.Add(saveItem);
-            saveItem.Click += SaveImg;
+                MenuItem saveItem = new MenuItem("Save");
+                setImageItem.MenuItems.Add(saveItem);
+                saveItem.Click += SaveImg;
 
-            MenuItem duplicateItem = new MenuItem("Duplicate");
-            cm.MenuItems.Add(duplicateItem);
+                MenuItem duplicateItem = new MenuItem("Duplicate");
+                cm.MenuItems.Add(duplicateItem);
 
-            MenuItem defaultItem = new MenuItem("Default");
-            duplicateItem.MenuItems.Add(defaultItem);
-            defaultItem.Click += CreateDefaultForm;
+                MenuItem defaultItem = new MenuItem("Default");
+                duplicateItem.MenuItems.Add(defaultItem);
+                defaultItem.Click += CreateDefaultForm;
 
-            MenuItem originalItem = new MenuItem("Original");
-            duplicateItem.MenuItems.Add(originalItem);
-            originalItem.Click += CreateOriginalForm;
+                MenuItem originalItem = new MenuItem("Original");
+                duplicateItem.MenuItems.Add(originalItem);
+                originalItem.Click += CreateOriginalForm;
 
-            MenuItem timeItem = new MenuItem("Add Clock");
-            cm.MenuItems.Add(timeItem);
+                MenuItem timeItem = new MenuItem("Add Clock");
+                cm.MenuItems.Add(timeItem);
 
-            MenuItem hourMinItem = new MenuItem("hh:mm");
-            timeItem.MenuItems.Add(hourMinItem);
-            hourMinItem.Click += AddClock;
+                MenuItem hourMinItem = new MenuItem("hh:mm");
+                timeItem.MenuItems.Add(hourMinItem);
+                hourMinItem.Click += AddClock;
 
-            MenuItem hourMinSecItem = new MenuItem("hh:mm:ss");
-            timeItem.MenuItems.Add(hourMinSecItem);
-            hourMinSecItem.Click += AddClockSec;
+                MenuItem hourMinSecItem = new MenuItem("hh:mm:ss");
+                timeItem.MenuItems.Add(hourMinSecItem);
+                hourMinSecItem.Click += AddClockSec;
 
-            MenuItem timerItem = new MenuItem("Timer");
-            cm.MenuItems.Add(timerItem);
+                MenuItem timerItem = new MenuItem("Timer");
+                cm.MenuItems.Add(timerItem);
 
-            MenuItem timeStartItem = new MenuItem("Start");
-            timerItem.MenuItems.Add(timeStartItem);
-            timeStartItem.Click += TimerStart;
+                MenuItem timeStartItem = new MenuItem("Start");
+                timerItem.MenuItems.Add(timeStartItem);
+                timeStartItem.Click += TimerStart;
 
-            MenuItem timePauseItem = new MenuItem("Pause");
-            timerItem.MenuItems.Add(timePauseItem);
-            timePauseItem.Click += TimerPause;
+                if (timerPauseWasClicked == true)
+                {
+                    MenuItem timePauseItem = new MenuItem("Pause");
+                    timerItem.MenuItems.Add(timePauseItem);
+                    timePauseItem.Click += TimerPause;
+                    timerPauseWasClicked = false;
+                }
 
-            MenuItem timerResumeItem = new MenuItem("Resume");
-            timerItem.MenuItems.Add(timerResumeItem);
-            timerResumeItem.Click += TimerResume;
+                else
+                {
+                    MenuItem timerResumeItem = new MenuItem("Resume");
+                    timerItem.MenuItems.Add(timerResumeItem);
+                    timerResumeItem.Click += TimerResume;
+                    timerPauseWasClicked = true;
+                }
 
-            MenuItem printItem = new MenuItem("Print");
-            setImageItem.MenuItems.Add(printItem);
-            printItem.Click += PrintImage;
+                MenuItem printItem = new MenuItem("Print");
+                setImageItem.MenuItems.Add(printItem);
+                printItem.Click += PrintImage;
 
-            MenuItem timeCancle = new MenuItem("Cancle");
-            timerItem.MenuItems.Add(timeCancle);
-            timeCancle.Click += TimerCancel;
+                MenuItem timeCancle = new MenuItem("Cancle");
+                timerItem.MenuItems.Add(timeCancle);
+                timeCancle.Click += TimerCancel;
 
-            MenuItem closeItem = new MenuItem("Close");
-            closeItem.Click += Close;
-            cm.MenuItems.Add(closeItem);
-            this.ContextMenu = cm;
+                MenuItem closeItem = new MenuItem("Close");
+                closeItem.Click += Close;
+                cm.MenuItems.Add(closeItem);
+                this.ContextMenu = cm;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void CreateOriginalForm(object sender, EventArgs e)
@@ -119,22 +135,38 @@ namespace AdCover
 
         private void Close(object sender, EventArgs e)
         {
-            this.Hide();
-            this.parent.count--;
-            if (this.parent.count < 0)
+            try
             {
-                this.parent.Close();
+                this.Hide();
+                this.parent.count--;
+                if (this.parent.count < 0)
+                {
+                    this.parent.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+                  
             }
         }
- 
+
         public void CreateOriginForm()
         {
-            Form1 f = new Form1(this);
-            f.ShowInTaskbar = false;
-            f.Show();
-            f.BackColor = f.parent.BackColor;
-            f.BackgroundImage = f.parent.BackgroundImage;
-            f.Size = f.parent.Size;
+            try
+            {
+                Form1 f = new Form1(this);
+                f.ShowInTaskbar = false;
+                f.Show();
+                f.BackColor = f.parent.BackColor;
+                f.BackgroundImage = f.parent.BackgroundImage;
+                f.Size = f.parent.Size;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         public void CreateForm()
@@ -143,9 +175,8 @@ namespace AdCover
             {
                 Form1 f = new Form1(this);
                 f.ShowInTaskbar = false;
-                f.Show();                
+                f.Show();
                 this.parent.count++;
-
             }
         }
 
@@ -156,44 +187,65 @@ namespace AdCover
 
         private void AddImage(object sender, EventArgs e)
         {
-            // Wrap the creation of the OpenFileDialog instance in a using statement,
-            // rather than manually calling the Dispose method to ensure proper disposal
-            using (OpenFileDialog dlg = new OpenFileDialog())
+            try
             {
-                dlg.Title = "Open Image";
-                dlg.Filter = "bmp files (*.bmp)|*.bmp|jpg files (*.jpg)|*.jpg|png files (*.png)|*.png|All files (*.*)|*.*";
-
-                if (dlg.ShowDialog() == DialogResult.OK)
+                // Wrap the creation of the OpenFileDialog instance in a using statement,
+                // rather than manually calling the Dispose method to ensure proper disposal
+                using (OpenFileDialog dlg = new OpenFileDialog())
                 {
-                    myimage = new Bitmap(dlg.FileName);
-                    this.BackgroundImage = myimage;
+                    dlg.Title = "Open Image";
+                    dlg.Filter = "bmp files (*.bmp)|*.bmp|jpg files (*.jpg)|*.jpg|png files (*.png)|*.png|All files (*.*)|*.*";
+
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        myimage = new Bitmap(dlg.FileName);
+                        this.BackgroundImage = myimage;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 
         private void SaveImg(object sender, EventArgs e)
         {
-            using (SaveFileDialog f = new SaveFileDialog())
+            try
             {
-                f.Filter = "bmp files (*.bmp)|*.bmp|jpg files (*.jpg)|*.jpg|png files (*.png)|*.png|All files (*.*)|*.*";
-
-                if (f.ShowDialog() == DialogResult.OK)
+                using (SaveFileDialog f = new SaveFileDialog())
                 {
-                    myimage.Save(f.FileName);
+                    f.Filter = "bmp files (*.bmp)|*.bmp|jpg files (*.jpg)|*.jpg|png files (*.png)|*.png|All files (*.*)|*.*";
+
+                    if (f.ShowDialog() == DialogResult.OK)
+                    {
+                        myimage.Save(f.FileName);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 
         private void ColorDialog(object sender, EventArgs e)
         {
-            // Show the color dialog.
-            colorDialog1 = new ColorDialog();
-            DialogResult result = colorDialog1.ShowDialog();
-            // See if user pressed ok.
-            if (result == DialogResult.OK)
+            try
             {
-                // Set form background to the selected color.
-                this.BackColor = colorDialog1.Color;
+                // Show the color dialog.
+                ColorDialog colorDialog1 = new ColorDialog();
+                DialogResult result = colorDialog1.ShowDialog();
+                // See if user pressed ok.
+                if (result == DialogResult.OK)
+                {
+                    // Set form background to the selected color.
+                    this.BackColor = colorDialog1.Color;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -248,188 +300,265 @@ namespace AdCover
 
         private void AddClockSec(object sender, EventArgs e)
         {
-            clock.Show();
-            DateTime dt = DateTime.Now;
-            hourMinSecTime.Start();
-            this.clock.Text = dt.ToString("hh:mm:ss");
+            try
+            {
+                clock.Show();
+                DateTime dt = DateTime.Now;
+                hourMinSecTime.Start();
+                this.clock.Text = dt.ToString("hh:mm:ss");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void AddClock(object sender, EventArgs e)
         {
-            clock.Show();
-            DateTime dt = DateTime.Now;
-            hourMinTime.Start();
-            this.clock.Text = dt.ToString("hh:mm");
+            try
+            {
+                clock.Show();
+                DateTime dt = DateTime.Now;
+                hourMinTime.Start();
+                this.clock.Text = dt.ToString("hh:mm");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void TimerStart(object sender, EventArgs e)
         {
-            hourLabel.Show();
-            minuteLabel.Show();
-            secondLabel.Show();
-            hourBox.Show();
-            minuteBox.Show();
-            secondBox.Show();
-            fileNameBox.Show();
-            openFileButton.Show();
-            fileLabel.Show();
-
-            if (hourBox.Text == "")
+            try
             {
-                hourBox.Text = "59";
-            }
+                hourLabel.Show();
+                minuteLabel.Show();
+                secondLabel.Show();
+                hourBox.Show();
+                minuteBox.Show();
+                secondBox.Show();
+                fileNameBox.Show();
+                openFileButton.Show();
+                fileLabel.Show();
 
-            if (minuteBox.Text == "")
+                if (hourBox.Text == "")
+                {
+                    hourBox.Text = "59";
+                }
+
+                if (minuteBox.Text == "")
+                {
+                    minuteBox.Text = "59";
+                }
+
+                if (secondBox.Text == "")
+                {
+                    secondBox.Text = "59";
+                }
+
+                hour = Convert.ToInt32(hourBox.Text);
+                minute = Convert.ToInt32(minuteBox.Text);
+                second = Convert.ToInt32(secondBox.Text);
+
+                timer1.Start();
+            }
+            catch (Exception ex)
             {
-                minuteBox.Text = "59";
+                MessageBox.Show(ex.ToString());
             }
-
-            if (secondBox.Text == "")
-            {
-                secondBox.Text = "59";
-            }
-
-            hour = Convert.ToInt32(hourBox.Text);
-            minute = Convert.ToInt32(minuteBox.Text);
-            second = Convert.ToInt32(secondBox.Text);
-
-            timer1.Start();
         }
         private void TimerTick(object sender, EventArgs e)
         {
-            second -= 1;
-
-            if (hour == -1)
+            try
             {
-                hour = 59;
-            }
+                second -= 1;
 
-            if (second == -1)
-            {
-                minute -= 1;
-                second = 59;
-            }
-
-            if (minute == -1)
-            {
-                hour -= 1;
-                minute = 59;
-            }
-
-            if (hour == 0 && minute == 0 && second == 0)
-            {
-                player = new SoundPlayer();
-
-                player.SoundLocation = @"C:\alarm.wav";
-                try
+                if (hour == -1)
                 {
-                    player.PlayLooping();
-                    timer1.Stop();
+                    hour = 59;
                 }
-                catch (Exception ex)
+
+                if (second == -1)
                 {
-
-                    MessageBox.Show(ex.ToString());
+                    minute -= 1;
+                    second = 59;
                 }
-            }
 
-            if (OpenFileButtonWasClicked)
-            {
+                if (minute == -1)
+                {
+                    hour -= 1;
+                    minute = 59;
+                }
+
                 if (hour == 0 && minute == 0 && second == 0)
                 {
                     player = new SoundPlayer();
 
-                    if (string.IsNullOrEmpty(fileNameBox.Text))
-                        return;
+                    player.SoundLocation = @"C:\alarm.wav";
+                    try
+                    {
+                        player.PlayLooping();
+                        timer1.Stop();
+                    }
+                    catch (Exception ex)
+                    {
 
-                    player.SoundLocation = fileNameBox.Text;
-
-                    player.PlayLooping();
-                    timer1.Stop();
+                        MessageBox.Show(ex.ToString());
+                    }
                 }
+
+                if (OpenFileButtonWasClicked)
+                {
+                    if (hour == 0 && minute == 0 && second == 0)
+                    {
+                        player = new SoundPlayer();
+
+                        if (string.IsNullOrEmpty(fileNameBox.Text))
+                            return;
+
+                        player.SoundLocation = fileNameBox.Text;
+
+                        player.PlayLooping();
+                        timer1.Stop();
+                    }
+                }
+
+                string h = Convert.ToString(hour);
+                string m = Convert.ToString(minute);
+                string s = Convert.ToString(second);
+
+                hourLabel.Text = h;
+                minuteLabel.Text = m;
+                secondLabel.Text = s;
             }
-
-            string h = Convert.ToString(hour);
-            string m = Convert.ToString(minute);
-            string s = Convert.ToString(second);
-
-            hourLabel.Text = h;
-            minuteLabel.Text = m;
-            secondLabel.Text = s;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void TimerPause(object sender, EventArgs e)
         {
-            timer1.Stop();
-            player.Stop();
+            try
+            {
+                CreateContextMenu();
+                timer1.Stop();
+                player.Stop();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void TimerResume(object sender, EventArgs e)
         {
-            timer1.Start();
+            try
+            {
+                CreateContextMenu();
+                timer1.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void TimerCancel(object sender, EventArgs e)
         {
-            clock.Hide();
-            hourLabel.Hide();
-            minuteLabel.Hide();
-            secondLabel.Hide();
-            hourBox.Hide();
-            minuteBox.Hide();
-            secondBox.Hide();
-            player.Stop();
-            fileNameBox.Hide();
-            openFileButton.Hide();
-            fileLabel.Hide();
+            try
+            {
+                clock.Hide();
+                hourLabel.Hide();
+                minuteLabel.Hide();
+                secondLabel.Hide();
+                hourBox.Hide();
+                minuteBox.Hide();
+                secondBox.Hide();
+                player.Stop();
+                fileNameBox.Hide();
+                openFileButton.Hide();
+                fileLabel.Hide();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }         
         }
 
         private void OpenFileButton(object sender, EventArgs e)
         {
-            OpenFileButtonWasClicked = true;
-            using (OpenFileDialog fd = new OpenFileDialog() { Filter = "WAV|*.wav", Multiselect = false, ValidateNames = true })
+            try
             {
-                if (fd.ShowDialog() == DialogResult.OK)
+                OpenFileButtonWasClicked = true;
+                using (OpenFileDialog fd = new OpenFileDialog() { Filter = "WAV|*.wav", Multiselect = false, ValidateNames = true })
                 {
-                    fileNameBox.Text = fd.FileName;
+                    if (fd.ShowDialog() == DialogResult.OK)
+                    {
+                        fileNameBox.Text = fd.FileName;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
 
         protected void PrintImage(object sender, EventArgs e)
         {
-            PrintDocument pd = new PrintDocument();
-            pd.PrintPage += (senders, args) =>
+            try
             {
-
-                Point p = new Point(100, 100);
-                args.Graphics.DrawImage(myimage, 10, 10, myimage.Width, myimage.Height);
-                args.Graphics.DrawImage(myimage, args.MarginBounds);
-
-            };
-            pd.Print();
+                PrintDocument pd = new PrintDocument();
+                pd.PrintPage += (senders, args) =>
+                {
+                    Point p = new Point(100, 100);
+                    args.Graphics.DrawImage(myimage, 10, 10, myimage.Width, myimage.Height);
+                    args.Graphics.DrawImage(myimage, args.MarginBounds);
+                };
+                pd.Print();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void PrintPage(object o, PrintPageEventArgs e)
         {
-            Image img = Image.FromFile("D:\\Foto.jpg");
-            Point loc = new Point(100, 100);
-            e.Graphics.DrawImage(img, loc);
+            try
+            {
+                Image img = Image.FromFile("D:\\Foto.jpg");
+                Point loc = new Point(100, 100);
+                e.Graphics.DrawImage(img, loc);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
-    
+
         private void LoadForm(object sender, EventArgs e)
         {
-            clock.Hide();
-            hourLabel.Hide();
-            minuteLabel.Hide();
-            secondLabel.Hide();
-            hourBox.Hide();
-            minuteBox.Hide();
-            secondBox.Hide();
-            fileNameBox.Hide();
-            openFileButton.Hide();
-            fileLabel.Hide();
-            this.BackColor = System.Drawing.Color.Yellow;
+            try
+            {
+                clock.Hide();
+                hourLabel.Hide();
+                minuteLabel.Hide();
+                secondLabel.Hide();
+                hourBox.Hide();
+                minuteBox.Hide();
+                secondBox.Hide();
+                fileNameBox.Hide();
+                openFileButton.Hide();
+                fileLabel.Hide();
+                this.BackColor = System.Drawing.Color.Yellow;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }
